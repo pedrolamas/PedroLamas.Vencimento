@@ -117,6 +117,9 @@
     <Content Include="Images\appbar.check.rest.png" />
     <Content Include="Images\appbar.euro.rest.png" />
     <Content Include="Images\appbar.feature.email.rest.png" />
+    <Content Include="IRSTables.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SplashScreenImage.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
