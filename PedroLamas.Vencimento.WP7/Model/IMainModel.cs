@@ -1,45 +1,13 @@
-﻿namespace PedroLamas.Vencimento.Model
+﻿using System.Collections.Generic;
+
+namespace PedroLamas.Vencimento.Model
 {
     public interface IMainModel
     {
-        IrsYear[] YearList { get; }
+        IList<SimulationModel2> Simulations { get; }
 
-        IrsFiscalResidence[] FiscalResidenceList { get; }
+        SimulationModel2 SelectedSimulation { get; set; }
 
-        IrsRegime[] RegimeList { get; }
-
-        IrsMaritalState[] MaritalStateList { get; }
-
-        IrsDependent[] DependentList { get; }
-
-        SocialSecurityRegime[] SocialSecurityRegimeList { get; }
-
-        double MonthlyBaseIncome { get; set; }
-
-        IrsYear Year { get; set; }
-
-        IrsFiscalResidence FiscalResidence { get; set; }
-
-        IrsRegime Regime { get; set; }
-
-        IrsMaritalState MaritalState { get; set; }
-
-        IrsDependent Dependent { get; set; }
-
-        SocialSecurityRegime SocialSecurityRegime { get; set; }
-
-        double DailyLunchAllowance { get; set; }
-
-        int WorkingDays { get; set; }
-
-        bool ChristmasVacationsAllowancesInTwelfths { get; set; }
-
-        bool ChristmasOvertaxed { get; set; }
-
-        SimulationResultEntry[] MonthlySimulationResult { get; }
-
-        SimulationResultEntry[] YearlySimulationResult { get; }
-
-        void Simulate();
+        void Save();
     }
 }

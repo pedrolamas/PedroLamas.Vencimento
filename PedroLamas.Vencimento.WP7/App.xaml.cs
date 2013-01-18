@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using Cimbalino.Phone.Toolkit.Extensions;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace PedroLamas.Vencimento.WP7
+namespace PedroLamas.Vencimento
 {
     public partial class App : Application
     {
@@ -31,11 +25,17 @@ namespace PedroLamas.Vencimento.WP7
             // Global handler for uncaught exceptions. 
             UnhandledException += Application_UnhandledException;
 
+            var ptCultureInfo = new System.Globalization.CultureInfo("pt-PT");
+
+            Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture = ptCultureInfo;
+
             // Standard Silverlight initialization
             InitializeComponent();
 
             // Phone-specific initialization
             InitializePhoneApplication();
+
+            DispatcherHelper.Initialize();
 
             // Show graphics profiling information while debugging.
             if (System.Diagnostics.Debugger.IsAttached)
@@ -116,7 +116,7 @@ namespace PedroLamas.Vencimento.WP7
 
             // Create the frame but don't set it as RootVisual yet; this allows the splash
             // screen to remain active until the application is ready to render.
-            RootFrame = new PhoneApplicationFrame();
+            RootFrame = new TransitionFrame();
             RootFrame.Navigated += CompleteInitializePhoneApplication;
 
             // Handle navigation failures

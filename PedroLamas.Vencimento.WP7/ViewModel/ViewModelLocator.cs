@@ -11,30 +11,41 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            SimpleIoc.Default.Register<INavigationService, NavigationService>();
-            SimpleIoc.Default.Register<IWebBrowserService, WebBrowserService>();
-            SimpleIoc.Default.Register<IMarketplaceReviewService, MarketplaceReviewService>();
-            SimpleIoc.Default.Register<IMarketplaceSearchService, MarketplaceSearchService>();
-            SimpleIoc.Default.Register<IShareLinkService, ShareLinkService>();
-            SimpleIoc.Default.Register<IEmailComposeService, EmailComposeService>();
-            SimpleIoc.Default.Register<IMessageBoxService, MessageBoxService>();
-            SimpleIoc.Default.Register<IApplicationSettingsService, ApplicationSettingsService>();
-            SimpleIoc.Default.Register<ISystemTrayService, SystemTrayService>();
+            SimpleIoc.Default.RegisterWithCheck<INavigationService, NavigationService>();
+            SimpleIoc.Default.RegisterWithCheck<IStorageService, StorageService>();
+            SimpleIoc.Default.RegisterWithCheck<IWebBrowserService, WebBrowserService>();
+            SimpleIoc.Default.RegisterWithCheck<IMarketplaceReviewService, MarketplaceReviewService>();
+            SimpleIoc.Default.RegisterWithCheck<IMarketplaceSearchService, MarketplaceSearchService>();
+            SimpleIoc.Default.RegisterWithCheck<IShareLinkService, ShareLinkService>();
+            SimpleIoc.Default.RegisterWithCheck<IEmailComposeService, EmailComposeService>();
+            SimpleIoc.Default.RegisterWithCheck<IMessageBoxService, MessageBoxService>();
+            SimpleIoc.Default.RegisterWithCheck<IApplicationSettingsService, ApplicationSettingsService>();
+            SimpleIoc.Default.RegisterWithCheck<ISystemTrayService, SystemTrayService>();
 
-            SimpleIoc.Default.Register<IMainModel, MainModel>();
+            SimpleIoc.Default.RegisterWithCheck<IDataModel, DataModel>();
+            SimpleIoc.Default.RegisterWithCheck<IMainModel, MainModel>();
 
-            //SimpleIoc.Default.RegisterWithCheck<MainViewModel>();
+            SimpleIoc.Default.RegisterWithCheck<MainViewModel>();
+            SimpleIoc.Default.RegisterWithCheck<EditViewModel>();
             //SimpleIoc.Default.RegisterWithCheck<ResultsViewModel>();
-            //SimpleIoc.Default.RegisterWithCheck<AboutViewModel>();
+            SimpleIoc.Default.RegisterWithCheck<AboutViewModel>();
         }
 
-        //public MainViewModel Main
-        //{
-        //    get
-        //    {
-        //        return ServiceLocator.Current.GetInstance<MainViewModel>();
-        //    }
-        //}
+        public MainViewModel Main
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<MainViewModel>();
+            }
+        }
+
+        public EditViewModel Edit
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<EditViewModel>();
+            }
+        }
 
         //public ResultsViewModel Results
         //{
@@ -55,6 +66,28 @@ namespace PedroLamas.Vencimento.ViewModel
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
+        }
+    }
+
+    public static class ExtensionMethods
+    {
+        public static void RegisterWithCheck<TInterface, TClass>(this SimpleIoc ioc)
+            where TInterface : class
+            where TClass : class
+        {
+            if (!ioc.IsRegistered<TInterface>())
+            {
+                ioc.Register<TInterface, TClass>();
+            }
+        }
+
+        public static void RegisterWithCheck<TClass>(this SimpleIoc ioc)
+            where TClass : class
+        {
+            if (!ioc.IsRegistered<TClass>())
+            {
+                ioc.Register<TClass>();
+            }
         }
     }
 }
