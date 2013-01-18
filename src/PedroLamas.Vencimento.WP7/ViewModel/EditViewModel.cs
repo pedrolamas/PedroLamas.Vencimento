@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Cimbalino.Phone.Toolkit.Services;
@@ -14,13 +15,35 @@ namespace PedroLamas.Vencimento.ViewModel
         private readonly IDataModel _dataModel;
         private readonly INavigationService _navigationService;
 
+        private SimulationModel2 _model;
+
         #region Properties
 
         public SimulationModel2 Model
         {
             get
             {
-                return _mainModel.SelectedSimulation;
+                return _model;
+            }
+            private set
+            {
+                if (_model == value)
+                    return;
+
+                _model = value;
+
+                RaisePropertyChanged(() => Model);
+                RaisePropertyChanged(() => MonthlyBaseIncome);
+                RaisePropertyChanged(() => Year);
+                RaisePropertyChanged(() => FiscalResidence);
+                RaisePropertyChanged(() => Regime);
+                RaisePropertyChanged(() => MaritalState);
+                RaisePropertyChanged(() => Dependent);
+                RaisePropertyChanged(() => SocialSecurityRegime);
+                RaisePropertyChanged(() => DailyLunchAllowance);
+                RaisePropertyChanged(() => WorkingDays);
+                RaisePropertyChanged(() => ChristmasVacationsAllowancesInTwelfths);
+                RaisePropertyChanged(() => ChristmasOvertaxed);
             }
         }
 
@@ -287,7 +310,7 @@ namespace PedroLamas.Vencimento.ViewModel
         }
 
         public RelayCommand PageLoadedCommand { get; private set; }
-        
+
         public RelayCommand ConfirmCommand { get; private set; }
 
         #endregion
@@ -300,9 +323,30 @@ namespace PedroLamas.Vencimento.ViewModel
 
             ConfirmCommand = new RelayCommand(() =>
             {
-                MessengerInstance.Send(new SimulationChangedMessage());
+                MessengerInstance.Send(new SimulationChangedMessage(Model));
 
                 _navigationService.GoBack();
+            });
+
+            PageLoadedCommand = new RelayCommand(() =>
+            {
+                if (_mainModel.SelectedSimulation == null)
+                {
+                    Model = new SimulationModel2
+                    {
+                        YearId = (_dataModel.YearList.FirstOrDefault(x => x.Year == DateTime.Today.Year) ?? _dataModel.YearList.Last()).Year,
+                        FiscalResidenceId = _dataModel.FiscalResidenceList.First().FiscalResidenceId,
+                        RegimeId = _dataModel.RegimeList.First().RegimeId,
+                        MaritalStateId = _dataModel.MaritalStateList.First().MaritalStateId,
+                        DependentId = _dataModel.DependentList.First().DependentId,
+                        SocialSecurityRegimeId = _dataModel.SocialSecurityRegimeList.First().SocialSecurityRegimeId,
+                        WorkingDays = 22
+                    };
+                }
+                else
+                {
+                    Model = _mainModel.SelectedSimulation.Clone();
+                }
             });
         }
     }
