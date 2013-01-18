@@ -5,6 +5,7 @@ using Cimbalino.Phone.Toolkit.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using PedroLamas.Vencimento.Model;
+using System;
 
 namespace PedroLamas.Vencimento.ViewModel
 {
@@ -309,13 +310,37 @@ namespace PedroLamas.Vencimento.ViewModel
             {
                 var simulation = _mainModel.SelectedSimulation;
 
-                if (simulation == null )
+                if (simulation == null)
                 {
+                    MonthlyBaseIncome = "0";
 
+                    Year = _dataModel.YearList
+                        .FirstOrDefault(x => x.Year == DateTime.Today.Year) ?? _dataModel.YearList.LastOrDefault();
+
+                    FiscalResidence = _dataModel.FiscalResidenceList
+                        .FirstOrDefault();
+
+                    Regime = _dataModel.RegimeList
+                        .FirstOrDefault();
+
+                    MaritalState = _dataModel.MaritalStateList
+                        .FirstOrDefault();
                 }
                 else
                 {
-                    MonthlyBaseIncome = simulation.MonthlyBaseIncome;
+                    MonthlyBaseIncome = simulation.MonthlyBaseIncome.ToString(CultureInfo.InvariantCulture);
+
+                    Year = _dataModel.YearList
+                        .FirstOrDefault(x => x.Year == simulation.YearId);
+
+                    FiscalResidence = _dataModel.FiscalResidenceList
+                        .FirstOrDefault(x => x.FiscalResidenceId == simulation.FiscalResidenceId);
+
+                    Regime = _dataModel.RegimeList
+                        .FirstOrDefault(x => x.RegimeId == simulation.RegimeId);
+
+                    MaritalState = _dataModel.MaritalStateList
+                        .FirstOrDefault(x => x.MaritalStateId == simulation.MaritalStateId);
                 }
             });
         }
