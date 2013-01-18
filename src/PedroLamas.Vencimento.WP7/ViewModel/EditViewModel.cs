@@ -14,32 +14,44 @@ namespace PedroLamas.Vencimento.ViewModel
         private readonly IDataModel _dataModel;
         private readonly INavigationService _navigationService;
 
+        private double _monthlyBaseIncome;
+        private IrsYear _year;
+        private IrsFiscalResidence _fiscalResidence;
+        private IrsRegime _regime;
+        private IrsMaritalState _maritalState;
+        private IrsDependent _dependent;
+        private SocialSecurityRegime _socialSecurityRegime;
+        private double _dailyLunchAllowance;
+        private int _workingDays;
+        private bool _christmasVacationsAllowancesInTwelfths;
+        private bool _christmasOvertaxed;
+
         #region Properties
 
-        public SimulationModel2 Model
-        {
-            get
-            {
-                return _mainModel.SelectedSimulation;
-            }
-        }
+        //public SimulationModel2 Model
+        //{
+        //    get
+        //    {
+        //        return _mainModel.SelectedSimulation;
+        //    }
+        //}
 
         public string MonthlyBaseIncome
         {
             get
             {
-                return Model.MonthlyBaseIncome.ToString(CultureInfo.InvariantCulture);
+                return _monthlyBaseIncome.ToString(CultureInfo.InvariantCulture);
             }
             set
             {
-                double monthlyGrossIncome;
+                double monthlyBaseIncome;
 
-                if (double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out monthlyGrossIncome))
+                if (double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out monthlyBaseIncome))
                 {
-                    if (Model.MonthlyBaseIncome == monthlyGrossIncome)
+                    if (_monthlyBaseIncome == monthlyBaseIncome)
                         return;
 
-                    Model.MonthlyBaseIncome = monthlyGrossIncome;
+                    _monthlyBaseIncome = monthlyBaseIncome;
 
                     RaisePropertyChanged(() => MonthlyBaseIncome);
                 }
@@ -50,16 +62,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return _dataModel.YearList.FirstOrDefault(x => x.Year == Model.YearId);
+                return _year;
             }
             set
             {
-                var yearId = value == null ? 0 : value.Year;
-
-                if (Model.YearId == yearId)
+                if (_year == value)
                     return;
 
-                Model.YearId = yearId;
+                _year = value;
 
                 RaisePropertyChanged(() => Year);
             }
@@ -69,16 +79,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return _dataModel.FiscalResidenceList.FirstOrDefault(x => x.FiscalResidenceId == Model.FiscalResidenceId);
+                return _fiscalResidence;
             }
             set
             {
-                var fiscalResidenceId = value == null ? 0 : value.FiscalResidenceId;
-
-                if (Model.FiscalResidenceId == fiscalResidenceId)
+                if (_fiscalResidence == value)
                     return;
 
-                Model.FiscalResidenceId = fiscalResidenceId;
+                _fiscalResidence = value;
 
                 RaisePropertyChanged(() => FiscalResidence);
             }
@@ -88,16 +96,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return _dataModel.RegimeList.FirstOrDefault(x => x.RegimeId == Model.RegimeId);
+                return _regime;
             }
             set
             {
-                var regimeId = value == null ? 0 : value.RegimeId;
-
-                if (Model.RegimeId == regimeId)
+                if (_regime == value)
                     return;
 
-                Model.RegimeId = regimeId;
+                _regime = value;
 
                 RaisePropertyChanged(() => Regime);
             }
@@ -107,16 +113,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return _dataModel.MaritalStateList.FirstOrDefault(x => x.MaritalStateId == Model.MaritalStateId);
+                return _maritalState;
             }
             set
             {
-                var maritalStateId = value == null ? 0 : value.MaritalStateId;
-
-                if (Model.MaritalStateId == maritalStateId)
+                if (_maritalState == value)
                     return;
 
-                Model.MaritalStateId = maritalStateId;
+                _maritalState = value;
 
                 RaisePropertyChanged(() => MaritalState);
             }
@@ -126,16 +130,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return _dataModel.DependentList.FirstOrDefault(x => x.DependentId == Model.DependentId);
+                return _dependent;
             }
             set
             {
-                var dependentId = value == null ? 0 : value.DependentId;
-
-                if (Model.DependentId == dependentId)
+                if (_dependent == value)
                     return;
 
-                Model.DependentId = dependentId;
+                _dependent = value;
 
                 RaisePropertyChanged(() => Dependent);
             }
@@ -145,16 +147,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return _dataModel.SocialSecurityRegimeList.FirstOrDefault(x => x.SocialSecurityRegimeId == Model.SocialSecurityRegimeId);
+                return _socialSecurityRegime;
             }
             set
             {
-                var socialSecurityRegimeId = value == null ? 0 : value.SocialSecurityRegimeId;
-
-                if (Model.SocialSecurityRegimeId == socialSecurityRegimeId)
+                if (_socialSecurityRegime == value)
                     return;
 
-                Model.SocialSecurityRegimeId = socialSecurityRegimeId;
+                _socialSecurityRegime = value;
 
                 RaisePropertyChanged(() => SocialSecurityRegime);
             }
@@ -164,7 +164,7 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return Model.DailyLunchAllowance.ToString(CultureInfo.InvariantCulture);
+                return _dailyLunchAllowance.ToString(CultureInfo.InvariantCulture);
             }
             set
             {
@@ -172,10 +172,10 @@ namespace PedroLamas.Vencimento.ViewModel
 
                 if (double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out dailyLunchAllowance))
                 {
-                    if (Model.DailyLunchAllowance == dailyLunchAllowance)
+                    if (_dailyLunchAllowance == dailyLunchAllowance)
                         return;
 
-                    Model.DailyLunchAllowance = dailyLunchAllowance;
+                    _dailyLunchAllowance = dailyLunchAllowance;
 
                     RaisePropertyChanged(() => DailyLunchAllowance);
                 }
@@ -186,7 +186,7 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return Model.WorkingDays.ToString(CultureInfo.InvariantCulture);
+                return _workingDays.ToString(CultureInfo.InvariantCulture);
             }
             set
             {
@@ -194,10 +194,10 @@ namespace PedroLamas.Vencimento.ViewModel
 
                 if (int.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out workingDays))
                 {
-                    if (Model.WorkingDays == workingDays)
+                    if (_workingDays == workingDays)
                         return;
 
-                    Model.WorkingDays = workingDays;
+                    _workingDays = workingDays;
 
                     RaisePropertyChanged(() => WorkingDays);
                 }
@@ -208,14 +208,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return Model.ChristmasVacationsAllowancesInTwelfths;
+                return _christmasVacationsAllowancesInTwelfths;
             }
             set
             {
-                if (Model.ChristmasVacationsAllowancesInTwelfths == value)
+                if (_christmasVacationsAllowancesInTwelfths == value)
                     return;
 
-                Model.ChristmasVacationsAllowancesInTwelfths = value;
+                _christmasVacationsAllowancesInTwelfths = value;
 
                 RaisePropertyChanged(() => ChristmasVacationsAllowancesInTwelfths);
             }
@@ -225,14 +225,14 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
-                return Model.ChristmasOvertaxed;
+                return _christmasOvertaxed;
             }
             set
             {
-                if (Model.ChristmasOvertaxed == value)
+                if (_christmasOvertaxed == value)
                     return;
 
-                Model.ChristmasOvertaxed = value;
+                _christmasOvertaxed = value;
 
                 RaisePropertyChanged(() => ChristmasOvertaxed);
             }
@@ -287,7 +287,7 @@ namespace PedroLamas.Vencimento.ViewModel
         }
 
         public RelayCommand PageLoadedCommand { get; private set; }
-        
+
         public RelayCommand ConfirmCommand { get; private set; }
 
         #endregion
@@ -303,6 +303,20 @@ namespace PedroLamas.Vencimento.ViewModel
                 MessengerInstance.Send(new SimulationChangedMessage());
 
                 _navigationService.GoBack();
+            });
+
+            PageLoadedCommand = new RelayCommand(() =>
+            {
+                var simulation = _mainModel.SelectedSimulation;
+
+                if (simulation == null )
+                {
+
+                }
+                else
+                {
+                    MonthlyBaseIncome = simulation.MonthlyBaseIncome;
+                }
             });
         }
     }
