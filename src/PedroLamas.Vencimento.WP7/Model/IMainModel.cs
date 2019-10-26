@@ -4,9 +4,9 @@ namespace PedroLamas.Vencimento.Model
 {
     public interface IMainModel
     {
-        IList<SimulationModel2> Simulations { get; }
+        IList<SimulationModel> Simulations { get; }
 
-        SimulationModel2 SelectedSimulation { get; set; }
+        SimulationModel SelectedSimulation { get; set; }
 
         void Save();
     }

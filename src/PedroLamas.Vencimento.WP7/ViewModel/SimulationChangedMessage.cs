@@ -5,11 +5,13 @@ namespace PedroLamas.Vencimento.ViewModel
 {
     public class SimulationChangedMessage : MessageBase
     {
-        public SimulationModel2 SimulationModel { get; private set; }
+        public SimulationModel OldSimulation { get; set; }
+        public SimulationModel NewSimulation { get; set; }
 
-        public SimulationChangedMessage(SimulationModel2 simulationModel)
+        public SimulationChangedMessage(SimulationModel oldSimulation, SimulationModel newSimulation)
         {
-            SimulationModel = simulationModel;
+            OldSimulation = oldSimulation;
+            NewSimulation = newSimulation;
         }
     }
 }

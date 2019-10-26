@@ -12,9 +12,9 @@ namespace PedroLamas.Vencimento.Model
 
         #region Properties
 
-        public IList<SimulationModel2> Simulations { get; private set; }
+        public IList<SimulationModel> Simulations { get; private set; }
 
-        public SimulationModel2 SelectedSimulation { get; set; }
+        public SimulationModel SelectedSimulation { get; set; }
 
         #endregion
 
@@ -27,10 +27,9 @@ namespace PedroLamas.Vencimento.Model
 
         private void Load()
         {
-            if (_storageService.FileExists(SimulationsFilename))
-                Simulations = JsonConvert.DeserializeObject<List<SimulationModel2>>(_storageService.ReadAllText(SimulationsFilename));
-            else
-                Simulations = new List<SimulationModel2>();
+            Simulations = _storageService.FileExists(SimulationsFilename) 
+                ? JsonConvert.DeserializeObject<List<SimulationModel>>(_storageService.ReadAllText(SimulationsFilename)) 
+                : new List<SimulationModel>();
         }
 
         public void Save()

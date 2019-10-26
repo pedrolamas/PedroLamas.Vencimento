@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -35,7 +36,7 @@ namespace PedroLamas.Vencimento.ViewModel
 
         public RelayCommand EnableSelectionCommand { get; private set; }
 
-        public RelayCommand<IList<SimulationViewModel>> DeleteSimulationCommand { get; private set; }
+        public RelayCommand<IList> DeleteSimulationCommand { get; private set; }
 
         public RelayCommand ShowAboutCommand { get; private set; }
 
@@ -115,7 +116,7 @@ namespace PedroLamas.Vencimento.ViewModel
 
             NewSimulationCommand = new RelayCommand(() =>
             {
-                _mainModel.SelectedSimulation = CreateNewSimulationModel();
+                _mainModel.SelectedSimulation = null;
 
                 _navigationService.NavigateTo("/View/EditPage.xaml");
             });
@@ -125,7 +126,7 @@ namespace PedroLamas.Vencimento.ViewModel
                 IsSelectionEnabled = true;
             }, () => !IsSimulationsListEmpty);
 
-            DeleteSimulationCommand = new RelayCommand<IList<SimulationViewModel>>(items =>
+            DeleteSimulationCommand = new RelayCommand<IList>(items =>
             {
                 if (items == null || items.Count == 0)
                     return;
@@ -136,6 +137,7 @@ namespace PedroLamas.Vencimento.ViewModel
                         return;
 
                     var itemsToRemove = items
+                        .Cast<SimulationViewModel>()
                         .ToArray();
 
                     foreach (var item in itemsToRemove)
@@ -170,11 +172,24 @@ namespace PedroLamas.Vencimento.ViewModel
             {
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
-                    if (!_mainModel.Simulations.Contains(_mainModel.SelectedSimulation))
-                    {
-                        _mainModel.Simulations.Add(_mainModel.SelectedSimulation);
+                    var oldSimulation = message.OldSimulation;
+                    var newSimulation = message.NewSimulation;
 
-                        Simulations.Add(new SimulationViewModel(_dataModel, _mainModel.SelectedSimulation));
+                    if (oldSimulation != null)
+                    {
+                        var index = _mainModel.Simulations.IndexOf(oldSimulation);
+
+                        _mainModel.Simulations[index] = newSimulation;
+
+                        var simulationViewModel = Simulations.First(x => x.Model == oldSimulation);
+
+                        simulationViewModel.Model = newSimulation;
+                    }
+                    else
+                    {
+                        _mainModel.Simulations.Add(newSimulation);
+
+                        Simulations.Add(new SimulationViewModel(_dataModel, newSimulation));
                     }
 
                     IsSimulationsListEmpty = false;
@@ -184,20 +199,6 @@ namespace PedroLamas.Vencimento.ViewModel
             });
 
             IsSimulationsListEmpty = (Simulations.Count == 0);
-        }
-
-        private SimulationModel2 CreateNewSimulationModel()
-        {
-            return new SimulationModel2
-            {
-                YearId = DateTime.Today.Year,
-                FiscalResidenceId = _dataModel.FiscalResidenceList.FirstOrDefault().FiscalResidenceId,
-                RegimeId = _dataModel.RegimeList.FirstOrDefault().RegimeId,
-                MaritalStateId = _dataModel.MaritalStateList.FirstOrDefault().MaritalStateId,
-                DependentId = _dataModel.DependentList.FirstOrDefault().DependentId,
-                SocialSecurityRegimeId = _dataModel.SocialSecurityRegimeList.FirstOrDefault().SocialSecurityRegimeId,
-                WorkingDays = 22
-            };
         }
     }
 }

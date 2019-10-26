@@ -15,11 +15,11 @@ namespace PedroLamas.Vencimento.ViewModel
         private readonly IDataModel _dataModel;
         private readonly INavigationService _navigationService;
 
-        private SimulationModel2 _model;
+        private SimulationModel _model;
 
         #region Properties
 
-        public SimulationModel2 Model
+        public SimulationModel Model
         {
             get
             {
@@ -51,6 +51,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return Model.MonthlyBaseIncome.ToString(CultureInfo.InvariantCulture);
             }
             set
@@ -73,6 +76,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null) 
+                    return null;
+
                 return _dataModel.YearList.FirstOrDefault(x => x.Year == Model.YearId);
             }
             set
@@ -92,6 +98,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return _dataModel.FiscalResidenceList.FirstOrDefault(x => x.FiscalResidenceId == Model.FiscalResidenceId);
             }
             set
@@ -111,6 +120,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return _dataModel.RegimeList.FirstOrDefault(x => x.RegimeId == Model.RegimeId);
             }
             set
@@ -130,6 +142,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return _dataModel.MaritalStateList.FirstOrDefault(x => x.MaritalStateId == Model.MaritalStateId);
             }
             set
@@ -149,6 +164,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return _dataModel.DependentList.FirstOrDefault(x => x.DependentId == Model.DependentId);
             }
             set
@@ -168,6 +186,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return _dataModel.SocialSecurityRegimeList.FirstOrDefault(x => x.SocialSecurityRegimeId == Model.SocialSecurityRegimeId);
             }
             set
@@ -187,6 +208,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return Model.DailyLunchAllowance.ToString(CultureInfo.InvariantCulture);
             }
             set
@@ -209,6 +233,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return null;
+
                 return Model.WorkingDays.ToString(CultureInfo.InvariantCulture);
             }
             set
@@ -231,6 +258,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return false;
+
                 return Model.ChristmasVacationsAllowancesInTwelfths;
             }
             set
@@ -248,6 +278,9 @@ namespace PedroLamas.Vencimento.ViewModel
         {
             get
             {
+                if (_model == null)
+                    return false;
+
                 return Model.ChristmasOvertaxed;
             }
             set
@@ -323,7 +356,7 @@ namespace PedroLamas.Vencimento.ViewModel
 
             ConfirmCommand = new RelayCommand(() =>
             {
-                MessengerInstance.Send(new SimulationChangedMessage(Model));
+                MessengerInstance.Send(new SimulationChangedMessage(_mainModel.SelectedSimulation, _model));
 
                 _navigationService.GoBack();
             });
@@ -332,16 +365,35 @@ namespace PedroLamas.Vencimento.ViewModel
             {
                 if (_mainModel.SelectedSimulation == null)
                 {
-                    Model = new SimulationModel2
-                    {
-                        YearId = (_dataModel.YearList.FirstOrDefault(x => x.Year == DateTime.Today.Year) ?? _dataModel.YearList.Last()).Year,
-                        FiscalResidenceId = _dataModel.FiscalResidenceList.First().FiscalResidenceId,
-                        RegimeId = _dataModel.RegimeList.First().RegimeId,
-                        MaritalStateId = _dataModel.MaritalStateList.First().MaritalStateId,
-                        DependentId = _dataModel.DependentList.First().DependentId,
-                        SocialSecurityRegimeId = _dataModel.SocialSecurityRegimeList.First().SocialSecurityRegimeId,
-                        WorkingDays = 22
-                    };
+                    _model = new SimulationModel();
+
+                    MonthlyBaseIncome = "0";
+
+                    Year = _dataModel.YearList
+                        .FirstOrDefault(x => x.Year == DateTime.Today.Year) ?? dataModel.YearList.LastOrDefault();
+
+                    FiscalResidence = dataModel.FiscalResidenceList
+                        .FirstOrDefault();
+
+                    Regime = dataModel.RegimeList
+                        .FirstOrDefault();
+
+                    MaritalState = dataModel.MaritalStateList
+                        .FirstOrDefault();
+
+                    Dependent = dataModel.DependentList
+                        .FirstOrDefault();
+
+                    SocialSecurityRegime = dataModel.SocialSecurityRegimeList
+                        .FirstOrDefault();
+
+                    DailyLunchAllowance = "0";
+
+                    WorkingDays = "22";
+
+                    ChristmasVacationsAllowancesInTwelfths = false;
+
+                    ChristmasOvertaxed = false;
                 }
                 else
                 {

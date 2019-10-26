@@ -6,7 +6,54 @@ using GalaSoft.MvvmLight;
 
 namespace PedroLamas.Vencimento.Model
 {
-    public class SimulationModel : ObservableObject
+    public class SimulationModel
+    {
+        #region Properties
+
+        public double MonthlyBaseIncome { get; set; }
+
+        public int YearId { get; set; }
+
+        public int FiscalResidenceId { get; set; }
+
+        public int RegimeId { get; set; }
+
+        public int MaritalStateId { get; set; }
+
+        public int DependentId { get; set; }
+
+        public int SocialSecurityRegimeId { get; set; }
+
+        public double DailyLunchAllowance { get; set; }
+
+        public int WorkingDays { get; set; }
+
+        public bool ChristmasVacationsAllowancesInTwelfths { get; set; }
+
+        public bool ChristmasOvertaxed { get; set; }
+
+        #endregion
+
+        public SimulationModel Clone()
+        {
+            return new SimulationModel()
+            {
+                MonthlyBaseIncome = this.MonthlyBaseIncome,
+                YearId = this.YearId,
+                FiscalResidenceId = this.FiscalResidenceId,
+                RegimeId = this.RegimeId,
+                MaritalStateId = this.MaritalStateId,
+                DependentId = this.DependentId,
+                SocialSecurityRegimeId = this.SocialSecurityRegimeId,
+                DailyLunchAllowance = this.DailyLunchAllowance,
+                WorkingDays = this.WorkingDays,
+                ChristmasVacationsAllowancesInTwelfths = this.ChristmasVacationsAllowancesInTwelfths,
+                ChristmasOvertaxed = this.ChristmasOvertaxed
+            };
+        }
+    }
+
+    public class SimulationModel3 : ObservableObject
     {
         private double _monthlyBaseIncome;
         private IrsYear _year;
@@ -199,51 +246,5 @@ namespace PedroLamas.Vencimento.Model
         }
 
         #endregion
-    }
-
-    public class SimulationModel2
-    {
-        #region Properties
-
-        public double MonthlyBaseIncome { get; set; }
-
-        public int YearId { get; set; }
-
-        public int FiscalResidenceId { get; set; }
-
-        public int RegimeId { get; set; }
-
-        public int MaritalStateId { get; set; }
-
-        public int DependentId { get; set; }
-
-        public int SocialSecurityRegimeId { get; set; }
-
-        public double DailyLunchAllowance { get; set; }
-
-        public int WorkingDays { get; set; }
-
-        public bool ChristmasVacationsAllowancesInTwelfths { get; set; }
-
-        public bool ChristmasOvertaxed { get; set; }
-
-        #endregion
-
-        public SimulationModel2 Clone()
-        {
-            return new SimulationModel2()
-            {
-                MonthlyBaseIncome = this.MonthlyBaseIncome,
-                FiscalResidenceId = this.FiscalResidenceId,
-                RegimeId = this.RegimeId,
-                MaritalStateId = this.MaritalStateId,
-                DependentId = this.DependentId,
-                SocialSecurityRegimeId = this.SocialSecurityRegimeId,
-                DailyLunchAllowance = this.DailyLunchAllowance,
-                WorkingDays = this.WorkingDays,
-                ChristmasVacationsAllowancesInTwelfths = this.ChristmasVacationsAllowancesInTwelfths,
-                ChristmasOvertaxed = this.ChristmasOvertaxed
-            };
-        }
     }
 }
